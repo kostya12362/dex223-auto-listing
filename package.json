@@ -1,0 +1,27 @@
+{
+  "name": "dex223-auto-listing-sepolia",
+  "license": "UNLICENSED",
+  "scripts": {
+    "template": "export $(xargs < .env) && mustache ./config/$NETWORK.js subgraph.template.yaml > subgraph.yaml",
+    "compile": "graph codegen --output-dir src/types/ && graph build",
+    "codegen": "graph codegen --output-dir src/types/",
+    "build": "graph build",
+    "deploy": "graph deploy --node https://api.studio.thegraph.com/deploy/ dex223-auto-listing-sepolia",
+    "create-local": "graph create --node http://localhost:8020/ dex223-auto-listing-sepolia",
+    "remove-local": "graph remove --node http://localhost:8020/ dex223-auto-listing-sepolia",
+    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 dex223-auto-listing-sepolia",
+    "test": "graph test"
+  },
+  "devDependencies": { 
+    "@graphprotocol/graph-cli": "0.68.0",
+    "@graphprotocol/graph-ts": "0.32.0",
+    "@typescript-eslint/eslint-plugin": "^2.0.0",
+    "@typescript-eslint/parser": "^2.0.0",
+    "eslint": "^6.2.2",
+    "eslint-config-prettier": "^6.1.0",
+    "prettier": "^1.18.2",
+    "typescript": "^3.5.2",
+    "matchstick-as": "^0.6.0",
+    "mustache": "^4.0.1"
+  }
+}

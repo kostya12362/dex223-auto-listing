@@ -1,0 +1,36 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+features:
+  - nonFatalErrors
+dataSources:
+  - kind: ethereum
+    name: AutoListingsRegistry
+    network: '{{network}}'
+    source:
+      address: '{{ v1.contracts.autoListingsRegistry.address }}'
+      abi: AutoListingsRegistry
+      startBlock: {{ v1.contracts.autoListingsRegistry.startBlock }}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - TokenListed
+      abis:
+        - name: AutoListingsRegistry
+          file: ./abis/AutoListingsRegistry.json
+        - name: AutoListing
+          file: ./abis/AutoListing.json
+        - name: ERC20andERC223
+          file: ./abis/ERC20andERC223.json
+        - name: ERC20andERC223SymbolBytes
+          file: ./abis/ERC20andERC223SymbolBytes.json
+        - name: ERC20andERC223NameBytes
+          file: ./abis/ERC20andERC223NameBytes.json
+      eventHandlers:
+        - event: TokenListed(indexed address,indexed address,indexed address)
+          handler: handleTokenListed
+      file: ./src/auto-listings-registry.ts
