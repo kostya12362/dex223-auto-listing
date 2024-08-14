@@ -184,6 +184,21 @@ export class AutoListing extends ethereum.SmartContract {
     return ethereum.CallResult.fromValue(value[0].toString());
   }
 
+  getRegistry(): Address {
+    let result = super.call("getRegistry", "getRegistry():(address)", []);
+
+    return result[0].toAddress();
+  }
+
+  try_getRegistry(): ethereum.CallResult<Address> {
+    let result = super.tryCall("getRegistry", "getRegistry():(address)", []);
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toAddress());
+  }
+
   getToken(index: BigInt): AutoListing__getTokenResult {
     let result = super.call("getToken", "getToken(uint256):(address,address)", [
       ethereum.Value.fromUnsignedBigInt(index),
@@ -487,6 +502,70 @@ export class ListCall__Outputs {
   _call: ListCall;
 
   constructor(call: ListCall) {
+    this._call = call;
+  }
+}
+
+export class UpdateMeCall extends ethereum.Call {
+  get inputs(): UpdateMeCall__Inputs {
+    return new UpdateMeCall__Inputs(this);
+  }
+
+  get outputs(): UpdateMeCall__Outputs {
+    return new UpdateMeCall__Outputs(this);
+  }
+}
+
+export class UpdateMeCall__Inputs {
+  _call: UpdateMeCall;
+
+  constructor(call: UpdateMeCall) {
+    this._call = call;
+  }
+
+  get _newURL(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+}
+
+export class UpdateMeCall__Outputs {
+  _call: UpdateMeCall;
+
+  constructor(call: UpdateMeCall) {
+    this._call = call;
+  }
+}
+
+export class UpdatePricesCall extends ethereum.Call {
+  get inputs(): UpdatePricesCall__Inputs {
+    return new UpdatePricesCall__Inputs(this);
+  }
+
+  get outputs(): UpdatePricesCall__Outputs {
+    return new UpdatePricesCall__Outputs(this);
+  }
+}
+
+export class UpdatePricesCall__Inputs {
+  _call: UpdatePricesCall;
+
+  constructor(call: UpdatePricesCall) {
+    this._call = call;
+  }
+
+  get _token(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _price(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class UpdatePricesCall__Outputs {
+  _call: UpdatePricesCall;
+
+  constructor(call: UpdatePricesCall) {
     this._call = call;
   }
 }

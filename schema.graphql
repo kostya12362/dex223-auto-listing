@@ -2,9 +2,19 @@ type AutoListing @entity(immutable: false) {
   id: ID!
   owner: String
   name: String!
+  url: String
+  meta: Bytes
+  pricesDetail: [PriceDetail!]! @derivedFrom(field: "autoListing")
   lastUpdated: BigInt!
   totalTokens: BigInt!
   tokens: [TokenListed!]! @derivedFrom(field: "authListing")
+}
+
+type PriceDetail @entity {
+  id: ID!
+  price: BigInt!
+  feeTokenAddress: FeeToken!
+  autoListing: AutoListing!
 }
 
 type Token @entity(immutable: false) {
@@ -14,7 +24,17 @@ type Token @entity(immutable: false) {
   name: String!
   symbol: String!
   decimals: BigInt!
+  inConverter: Boolean!
   numberAdditions: BigInt!
+}
+
+type FeeToken @entity(immutable: false) {
+  id: ID!
+  address: String!
+  name: String!
+  symbol: String!
+  decimals: BigInt!
+  inConverter: Boolean!
 }
 
 type TokenListed @entity(immutable: true) {

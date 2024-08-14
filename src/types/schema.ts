@@ -82,6 +82,48 @@ export class AutoListing extends Entity {
     this.set("name", Value.fromString(value));
   }
 
+  get url(): string | null {
+    let value = this.get("url");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toString();
+    }
+  }
+
+  set url(value: string | null) {
+    if (!value) {
+      this.unset("url");
+    } else {
+      this.set("url", Value.fromString(<string>value));
+    }
+  }
+
+  get meta(): Bytes | null {
+    let value = this.get("meta");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toBytes();
+    }
+  }
+
+  set meta(value: Bytes | null) {
+    if (!value) {
+      this.unset("meta");
+    } else {
+      this.set("meta", Value.fromBytes(<Bytes>value));
+    }
+  }
+
+  get pricesDetail(): PriceDetailLoader {
+    return new PriceDetailLoader(
+      "AutoListing",
+      this.get("id")!.toString(),
+      "pricesDetail",
+    );
+  }
+
   get lastUpdated(): BigInt {
     let value = this.get("lastUpdated");
     if (!value || value.kind == ValueKind.NULL) {
@@ -114,6 +156,87 @@ export class AutoListing extends Entity {
       this.get("id")!.toString(),
       "tokens",
     );
+  }
+}
+
+export class PriceDetail extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save PriceDetail entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type PriceDetail must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("PriceDetail", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): PriceDetail | null {
+    return changetype<PriceDetail | null>(
+      store.get_in_block("PriceDetail", id),
+    );
+  }
+
+  static load(id: string): PriceDetail | null {
+    return changetype<PriceDetail | null>(store.get("PriceDetail", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get price(): BigInt {
+    let value = this.get("price");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set price(value: BigInt) {
+    this.set("price", Value.fromBigInt(value));
+  }
+
+  get feeTokenAddress(): string {
+    let value = this.get("feeTokenAddress");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set feeTokenAddress(value: string) {
+    this.set("feeTokenAddress", Value.fromString(value));
+  }
+
+  get autoListing(): string {
+    let value = this.get("autoListing");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set autoListing(value: string) {
+    this.set("autoListing", Value.fromString(value));
   }
 }
 
@@ -221,6 +344,19 @@ export class Token extends Entity {
     this.set("decimals", Value.fromBigInt(value));
   }
 
+  get inConverter(): boolean {
+    let value = this.get("inConverter");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set inConverter(value: boolean) {
+    this.set("inConverter", Value.fromBoolean(value));
+  }
+
   get numberAdditions(): BigInt {
     let value = this.get("numberAdditions");
     if (!value || value.kind == ValueKind.NULL) {
@@ -232,6 +368,111 @@ export class Token extends Entity {
 
   set numberAdditions(value: BigInt) {
     this.set("numberAdditions", Value.fromBigInt(value));
+  }
+}
+
+export class FeeToken extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save FeeToken entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type FeeToken must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`,
+      );
+      store.set("FeeToken", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): FeeToken | null {
+    return changetype<FeeToken | null>(store.get_in_block("FeeToken", id));
+  }
+
+  static load(id: string): FeeToken | null {
+    return changetype<FeeToken | null>(store.get("FeeToken", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get address(): string {
+    let value = this.get("address");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set address(value: string) {
+    this.set("address", Value.fromString(value));
+  }
+
+  get name(): string {
+    let value = this.get("name");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
+  }
+
+  get symbol(): string {
+    let value = this.get("symbol");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set symbol(value: string) {
+    this.set("symbol", Value.fromString(value));
+  }
+
+  get decimals(): BigInt {
+    let value = this.get("decimals");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set decimals(value: BigInt) {
+    this.set("decimals", Value.fromBigInt(value));
+  }
+
+  get inConverter(): boolean {
+    let value = this.get("inConverter");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set inConverter(value: boolean) {
+    this.set("inConverter", Value.fromBoolean(value));
   }
 }
 
@@ -313,6 +554,24 @@ export class TokenListed extends Entity {
 
   set timestamp(value: BigInt) {
     this.set("timestamp", Value.fromBigInt(value));
+  }
+}
+
+export class PriceDetailLoader extends Entity {
+  _entity: string;
+  _field: string;
+  _id: string;
+
+  constructor(entity: string, id: string, field: string) {
+    super();
+    this._entity = entity;
+    this._id = id;
+    this._field = field;
+  }
+
+  load(): PriceDetail[] {
+    let value = store.loadRelated(this._entity, this._id, this._field);
+    return changetype<PriceDetail[]>(value);
   }
 }
 

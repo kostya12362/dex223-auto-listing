@@ -30,7 +30,13 @@ dataSources:
           file: ./abis/ERC20andERC223SymbolBytes.json
         - name: ERC20andERC223NameBytes
           file: ./abis/ERC20andERC223NameBytes.json
+        - name: TokenConverter
+          file: ./abis/TokenConverter.json
       eventHandlers:
         - event: TokenListed(indexed address,indexed address,indexed address)
           handler: handleTokenListed
+        - event: ListingContractUpdated(indexed address,address,string,bytes)
+          handler: handleListingContractUpdated
+        - event: ListingPrice(indexed address,indexed address,uint256)
+          handler: handleListingPrice
       file: ./src/auto-listings-registry.ts

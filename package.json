@@ -2,7 +2,7 @@
   "name": "dex223-auto-listing-sepolia",
   "license": "UNLICENSED",
   "scripts": {
-    "template": "export $(xargs < .env) && mustache ./config/$NETWORK.js subgraph.template.yaml > subgraph.yaml",
+    "template": "export $(xargs < .env) && mustache ./config/$NETWORK.js subgraph.template.yaml > subgraph.yaml && mustache ./config/$NETWORK.js ./src/utils/constants.template.ts > ./src/utils/constants.ts",
     "compile": "graph codegen --output-dir src/types/ && graph build",
     "codegen": "graph codegen --output-dir src/types/",
     "build": "graph build",

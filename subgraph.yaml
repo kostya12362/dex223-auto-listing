@@ -8,11 +8,11 @@ features:
 dataSources:
   - kind: ethereum
     name: AutoListingsRegistry
-    network: 'chapel'
+    network: 'sepolia'
     source:
-      address: '0x1245c83de3cc16193de8777ed597b677d789ac94'
+      address: '0x3941ff18ff902b88b16ca8029c0d133ef262a196'
       abi: AutoListingsRegistry
-      startBlock: 41641153
+      startBlock: 6340494
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -30,7 +30,13 @@ dataSources:
           file: ./abis/ERC20andERC223SymbolBytes.json
         - name: ERC20andERC223NameBytes
           file: ./abis/ERC20andERC223NameBytes.json
+        - name: TokenConverter
+          file: ./abis/TokenConverter.json
       eventHandlers:
         - event: TokenListed(indexed address,indexed address,indexed address)
           handler: handleTokenListed
+        - event: ListingContractUpdated(indexed address,address,string,bytes)
+          handler: handleListingContractUpdated
+        - event: ListingPrice(indexed address,indexed address,uint256)
+          handler: handleListingPrice
       file: ./src/auto-listings-registry.ts

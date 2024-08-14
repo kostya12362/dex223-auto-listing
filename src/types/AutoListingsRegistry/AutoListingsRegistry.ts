@@ -10,6 +10,62 @@ import {
   BigInt,
 } from "@graphprotocol/graph-ts";
 
+export class ListingContractUpdated extends ethereum.Event {
+  get params(): ListingContractUpdated__Params {
+    return new ListingContractUpdated__Params(this);
+  }
+}
+
+export class ListingContractUpdated__Params {
+  _event: ListingContractUpdated;
+
+  constructor(event: ListingContractUpdated) {
+    this._event = event;
+  }
+
+  get _autolisting(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get _owner(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get _url(): string {
+    return this._event.parameters[2].value.toString();
+  }
+
+  get _metadata(): Bytes {
+    return this._event.parameters[3].value.toBytes();
+  }
+}
+
+export class ListingPrice extends ethereum.Event {
+  get params(): ListingPrice__Params {
+    return new ListingPrice__Params(this);
+  }
+}
+
+export class ListingPrice__Params {
+  _event: ListingPrice;
+
+  constructor(event: ListingPrice) {
+    this._event = event;
+  }
+
+  get _autolisting(): Address {
+    return this._event.parameters[0].value.toAddress();
+  }
+
+  get _token(): Address {
+    return this._event.parameters[1].value.toAddress();
+  }
+
+  get _price(): BigInt {
+    return this._event.parameters[2].value.toBigInt();
+  }
+}
+
 export class TokenListed extends ethereum.Event {
   get params(): TokenListed__Params {
     return new TokenListed__Params(this);
@@ -72,6 +128,73 @@ export class AutoListingsRegistry extends ethereum.SmartContract {
     let value = result.value;
     return ethereum.CallResult.fromValue(value[0].toBoolean());
   }
+
+  updateContractInfo(_owner: Address, _url: string, _metadata: Bytes): boolean {
+    let result = super.call(
+      "updateContractInfo",
+      "updateContractInfo(address,string,bytes):(bool)",
+      [
+        ethereum.Value.fromAddress(_owner),
+        ethereum.Value.fromString(_url),
+        ethereum.Value.fromBytes(_metadata),
+      ],
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_updateContractInfo(
+    _owner: Address,
+    _url: string,
+    _metadata: Bytes,
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "updateContractInfo",
+      "updateContractInfo(address,string,bytes):(bool)",
+      [
+        ethereum.Value.fromAddress(_owner),
+        ethereum.Value.fromString(_url),
+        ethereum.Value.fromBytes(_metadata),
+      ],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
+
+  updateListingPrice(_token: Address, _price: BigInt): boolean {
+    let result = super.call(
+      "updateListingPrice",
+      "updateListingPrice(address,uint256):(bool)",
+      [
+        ethereum.Value.fromAddress(_token),
+        ethereum.Value.fromUnsignedBigInt(_price),
+      ],
+    );
+
+    return result[0].toBoolean();
+  }
+
+  try_updateListingPrice(
+    _token: Address,
+    _price: BigInt,
+  ): ethereum.CallResult<boolean> {
+    let result = super.tryCall(
+      "updateListingPrice",
+      "updateListingPrice(address,uint256):(bool)",
+      [
+        ethereum.Value.fromAddress(_token),
+        ethereum.Value.fromUnsignedBigInt(_price),
+      ],
+    );
+    if (result.reverted) {
+      return new ethereum.CallResult();
+    }
+    let value = result.value;
+    return ethereum.CallResult.fromValue(value[0].toBoolean());
+  }
 }
 
 export class RecordListingCall extends ethereum.Call {
@@ -104,6 +227,86 @@ export class RecordListingCall__Outputs {
   _call: RecordListingCall;
 
   constructor(call: RecordListingCall) {
+    this._call = call;
+  }
+
+  get value0(): boolean {
+    return this._call.outputValues[0].value.toBoolean();
+  }
+}
+
+export class UpdateContractInfoCall extends ethereum.Call {
+  get inputs(): UpdateContractInfoCall__Inputs {
+    return new UpdateContractInfoCall__Inputs(this);
+  }
+
+  get outputs(): UpdateContractInfoCall__Outputs {
+    return new UpdateContractInfoCall__Outputs(this);
+  }
+}
+
+export class UpdateContractInfoCall__Inputs {
+  _call: UpdateContractInfoCall;
+
+  constructor(call: UpdateContractInfoCall) {
+    this._call = call;
+  }
+
+  get _owner(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _url(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+
+  get _metadata(): Bytes {
+    return this._call.inputValues[2].value.toBytes();
+  }
+}
+
+export class UpdateContractInfoCall__Outputs {
+  _call: UpdateContractInfoCall;
+
+  constructor(call: UpdateContractInfoCall) {
+    this._call = call;
+  }
+
+  get value0(): boolean {
+    return this._call.outputValues[0].value.toBoolean();
+  }
+}
+
+export class UpdateListingPriceCall extends ethereum.Call {
+  get inputs(): UpdateListingPriceCall__Inputs {
+    return new UpdateListingPriceCall__Inputs(this);
+  }
+
+  get outputs(): UpdateListingPriceCall__Outputs {
+    return new UpdateListingPriceCall__Outputs(this);
+  }
+}
+
+export class UpdateListingPriceCall__Inputs {
+  _call: UpdateListingPriceCall;
+
+  constructor(call: UpdateListingPriceCall) {
+    this._call = call;
+  }
+
+  get _token(): Address {
+    return this._call.inputValues[0].value.toAddress();
+  }
+
+  get _price(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+}
+
+export class UpdateListingPriceCall__Outputs {
+  _call: UpdateListingPriceCall;
+
+  constructor(call: UpdateListingPriceCall) {
     this._call = call;
   }
 
